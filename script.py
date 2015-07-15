@@ -3,7 +3,7 @@ import urllib
 import xml.etree.ElementTree as ET
 import time, math
 
-TELNET = "telnet 192.168.2.243 10001"
+TELNET = "telnet 192.168.2.241 10001"
 time_delay = 0.3
 time_step = 0.001
 
@@ -16,6 +16,16 @@ IIon = "echo '*B1OS2H'|" + TELNET
 IIoff = "echo '*B1OS2L'|" + TELNET
 IIIon = "echo '*B1OS3H'|" + TELNET
 IIIoff = "echo '*B1OS3L'|" + TELNET
+IVon = "echo '*B1OS4H'|" + TELNET
+IVoff = "echo '*B1OS4L'|" + TELNET
+Von = "echo '*B1OS5H'|" + TELNET
+Voff = "echo '*B1OS5L'|" + TELNET
+VIon = "echo '*B1OS6H'|" + TELNET
+VIoff = "echo '*B1OS6L'|" + TELNET
+VIIon = "echo '*B1OS7H'|" + TELNET
+VIIoff = "echo '*B1OS7L'|" + TELNET
+VIIIon = "echo '*B1OS8H'|" + TELNET
+VIIIoff = "echo '*B1OS8L'|" + TELNET
 
 
 
@@ -59,8 +69,11 @@ class Varistor():
 		inputs = root[0]
 		return float(inputs.attrib['val'])
 
-va = Varistor('http://192.168.2.253/data.xml')
+va = Varistor('http://192.168.2.242/data.xml')
 
+call(IVon, shell=True);call(VIIon, shell=True);call(VIIIon, shell=True)
+time.sleep(1)
 print va.getValue()
-va.setValue(3)
+va.setValue(2.8)
+#call(IVoff, shell=True);call(VIIoff, shell=True);call(VIIIoff, shell=True)
 print "done"

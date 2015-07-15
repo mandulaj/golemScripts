@@ -84,7 +84,10 @@ class Varistor():
   def getValue(self):
     return self.voltageGetter.get()
 
-va = Varistor('http://192.168.2.242/data.xml')
+
+dataGetter = AD_DataGetter('http://192.168.2.242/data.xml')
+
+va = Varistor(dataGetter)
 
 #call(IVon, shell=True);call(VIIon, shell=True);call(VIIIon, shell=True)
 time.sleep(1)

@@ -48,40 +48,40 @@ class AD_DataGetter(DataGetter):
 
 
 class Varistor():
-	def __init__(self, voltageGetter, rang=0.2):
-		self.voltageGetter = voltageGetter
-		self.rang = rang
+  def __init__(self, voltageGetter, rang=0.2):
+    self.voltageGetter = voltageGetter
+    self.rang = rang
 
-	def _move(self, val):
-		for i in xrange(abs(val)):
-			if val > 0:
-				call(IIon, shell=True)
-				call(IIIon, shell=True)
-			else:
-				call(IIoff, shell=True)
-				call(IIIoff, shell=True)
+  def _move(self, val):
+    for i in xrange(abs(val)):
+      if val > 0:
+        call(IIon, shell=True)
+        call(IIIon, shell=True)
+      else:
+        call(IIoff, shell=True)
+        call(IIIoff, shell=True)
 
-			time.sleep(time_delay)
-		        call(Ion, shell=True)
-			time.sleep(time_step)
-		        call(Ioff, shell=True)
-		        time.sleep(time_step)
-
-
-
-	def setValue(self, value):
-		while True:
-			currentVal = self.getValue()
-			offset = currentVal - value
-			print offset
-			if abs(offset) < self.rang: # we are in range of the value
-				return
-
-			self._move(int(math.ceil(offset*10)))  # move the head a little
+      time.sleep(time_delay)
+            call(Ion, shell=True)
+      time.sleep(time_step)
+            call(Ioff, shell=True)
+            time.sleep(time_step)
 
 
 
-	def getValue(self):
+  def setValue(self, value):
+    while True:
+      currentVal = self.getValue()
+      offset = currentVal - value
+      print offset
+      if abs(offset) < self.rang: # we are in range of the value
+        return
+
+      self._move(int(math.ceil(offset*10)))  # move the head a little
+
+
+
+  def getValue(self):
     return self.voltageGetter.get()
 
 va = Varistor('http://192.168.2.242/data.xml')

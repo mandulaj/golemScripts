@@ -28,10 +28,28 @@ VIIIon = "echo '*B1OS8H'|" + TELNET
 VIIIoff = "echo '*B1OS8L'|" + TELNET
 
 
+class DataGetter():
+  def __init__(self):
+    pass
+  def get(self):
+    pass
+
+class AD_DataGetter(DataGetter):
+  def __init__(self, url):
+    self.url = url
+
+  def get(self):
+    data = urllib.urlopen(self.url).read()
+    root = ET.fromstring(data)
+    inputs = root[0]
+
+    return float(inputs.attrib['val'])
+
+
 
 class Varistor():
-	def __init__(self, addr, rang=0.2):
-		self.url = addr
+	def __init__(self, voltageGetter, rang=0.2):
+		self.voltageGetter = voltageGetter
 		self.rang = rang
 
 	def _move(self, val):
@@ -64,10 +82,7 @@ class Varistor():
 
 
 	def getValue(self):
-		data = urllib.urlopen(self.url).read()
-		root = ET.fromstring(data)
-		inputs = root[0]
-		return float(inputs.attrib['val'])
+    return self.voltageGetter.get()
 
 va = Varistor('http://192.168.2.242/data.xml')
 

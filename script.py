@@ -33,7 +33,7 @@ class Varistor():
 	def __init__(self, addr, rang=0.2):
 		self.url = addr
 		self.rang = rang
-	
+
 	def _move(self, val):
 		for i in xrange(abs(val)):
 			if val > 0:
@@ -50,7 +50,7 @@ class Varistor():
 		        time.sleep(time_step)
 
 
-	
+
 	def setValue(self, value):
 		while True:
 			currentVal = self.getValue()
@@ -60,7 +60,7 @@ class Varistor():
 				return
 
 			self._move(int(math.ceil(offset*10)))  # move the head a little
-				
+
 
 
 	def getValue(self):
@@ -71,9 +71,9 @@ class Varistor():
 
 va = Varistor('http://192.168.2.242/data.xml')
 
-call(IVon, shell=True);call(VIIon, shell=True);call(VIIIon, shell=True)
+#call(IVon, shell=True);call(VIIon, shell=True);call(VIIIon, shell=True)
 time.sleep(1)
 print va.getValue()
-va.setValue(2.8)
+#va.setValue(2.8)
 #call(IVoff, shell=True);call(VIIoff, shell=True);call(VIIIoff, shell=True)
 print "done"

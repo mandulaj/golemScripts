@@ -1,4 +1,4 @@
-PORT=telnet 192.168.2.243 10001
+PORT=telnet 192.168.2.241 10001
 imeDelay=sleep 0.2s
 TimeStep=0.001s
 CountEnd=5

@@ -64,7 +64,7 @@ class Relay_PotentiometerMover(PotentiometerMover):
     else:
       stateLetter = "L"
 
-    stringToSend = "echo '*B10S" + str(relayId) + stateLetter + "' | " + TELNET
+    stringToSend = "echo '*B1OS" + str(relayId) + stateLetter + "' | " + TELNET
     call(stringToSend, shell=True)
 
   def move(self, val):

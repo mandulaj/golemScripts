@@ -3,7 +3,10 @@ import urllib
 import xml.etree.ElementTree as ET
 import time, math
 
+import serialDecoder.py as sd
+
 TELNET = "telnet 192.168.2.241 10001"
+device = '/dev/cu.usbserial'
 time_delay = 0.3
 time_step = 0.001
 
@@ -35,6 +38,15 @@ class AD_DataGetter(DataGetter):
     inputs = root[0]
 
     return float(inputs.attrib['val'])
+
+class Serial_DataGetter(DataGetter):
+  """Class using the VA18B voltmeter over serial connection"""
+  def __init__(self, serialDevice):
+    self.serialDevice
+
+  def get(self):
+    return float(self.serialDevice.getValue())
+
 
 class Relay_PotentiometerMover(PotentiometerMover):
   """Class using the Quido relay for moving the potentiometer head"""
@@ -98,18 +110,15 @@ class Potentiometer():
     return self.voltageGetter.get()
 
 
-dataGetter = AD_DataGetter('http://192.168.2.242/data.xml')
-
-va = Potentiometer(dataGetter)
-
-#call(IVon, shell=True);call(VIIon, shell=True);call(VIIIon, shell=True)
-#time.sleep(1)
-#print va.getValue()
-#va.setValue(2.8)
-#call(IVoff, shell=True);call(VIIoff, shell=True);call(VIIIoff, shell=True)
-
 po = Relay_PotentiometerMover()
 
+## Using AD
+dataGetter = AD_DataGetter('http://192.168.2.242/data.xml')
+va = Potentiometer(dataGetter)
+
+## Using serial device
+#with sd.SerialDevice(device, 1) as s:
+#  dataGetter = Serial_DataGetter(s)
+#  va = Potentiometer(dataGetter)
 
 
-print "done"

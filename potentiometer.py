@@ -8,7 +8,7 @@ import time, math
 
 TELNET = "telnet 192.168.2.241 10001"
 device = '/dev/cu.usbserial'
-time_delay = 0.3
+time_delay = 0.1
 time_step = 0.001
 
 
@@ -68,7 +68,6 @@ class Relay_PotentiometerMover(PotentiometerMover):
     call(stringToSend, shell=True)
 
   def move(self, val):
-
     for i in xrange(abs(val)):
       if val > 0:
         self._sendCommand(2, True)
@@ -77,7 +76,8 @@ class Relay_PotentiometerMover(PotentiometerMover):
         self._sendCommand(2, False)
         self._sendCommand(3, False)
 
-      time.sleep(time_delay)
+      print val
+      time.sleep(time_delay/(abs(val)/10.0))
       self._sendCommand(1, True)
       time.sleep(time_step)
       self._sendCommand(1, False)
@@ -86,21 +86,45 @@ class Relay_PotentiometerMover(PotentiometerMover):
 
 
 class Potentiometer():
-  def __init__(self, voltageGetter, potentiometerMover, rang=0.2):
+  def __init__(self, voltageGetter, potentiometerMover, rang=0.05):
     self.vG = voltageGetter
     self.pM = potentiometerMover
     self.rang = rang
 
   def setValue(self, value):
     while True:
-      currentVal = self.getValue()
-      print "currentVal: " , currentVal
-      offset = currentVal - value
-      print offset
+      offset = self._offset(value)
       if abs(offset) < self.rang: # we are in range of the value
+        time.sleep(1)
+        print "done"
+        if abs(self._offset(value)) > self.rang:
+          print "final:",self._offset(value)
+          continue
+        print self._offset(value)
         return
 
-      self._move(int(math.ceil(offset*10)))  # move the head a little
+
+      move = self._movement(offset)
+      print "moving", move
+      self._move(int(move))  # move the head a little
+
+  def _offset(self, value):
+    currentVal = self.getValue()
+    offset = currentVal - value
+    return offset
+
+  def _movement(self, offset):
+    if offset < 0:
+      sign = True
+    else:
+      sign = False
+
+    move = math.ceil((offset*10))
+
+    if sign:
+      move *= 1
+
+    return move
 
   def _move(self, val):
     self.pM.move(val)

@@ -3,7 +3,8 @@ import urllib
 import xml.etree.ElementTree as ET
 import time, math
 
-import serialDecoder.py as sd
+## serial is not no buon
+#import serialDecoder.py as sd
 
 TELNET = "telnet 192.168.2.241 10001"
 device = '/dev/cu.usbserial'
@@ -85,13 +86,10 @@ class Relay_PotentiometerMover(PotentiometerMover):
 
 
 class Potentiometer():
-  def __init__(self, voltageGetter, rang=0.2):
-    self.voltageGetter = voltageGetter
+  def __init__(self, voltageGetter, potentiometerMover, rang=0.2):
+    self.vG = voltageGetter
+    self.pM = potentiometerMover
     self.rang = rang
-
-
-
-
 
   def setValue(self, value):
     while True:
@@ -104,18 +102,23 @@ class Potentiometer():
 
       self._move(int(math.ceil(offset*10)))  # move the head a little
 
-
+  def _move(self, val):
+    self.pM.move(val)
 
   def getValue(self):
-    return self.voltageGetter.get()
+    return self.vG.get()
 
 
 po = Relay_PotentiometerMover()
 
 ## Using AD
 dataGetter = AD_DataGetter('http://192.168.2.242/data.xml')
-va = Potentiometer(dataGetter)
+va = Potentiometer(dataGetter, po)
 
+
+print va.getValue()
+
+va.setValue(2)
 ## Using serial device
 #with sd.SerialDevice(device, 1) as s:
 #  dataGetter = Serial_DataGetter(s)
